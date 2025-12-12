@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kaojino THBC Exchange</title>
+
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- ethers.js (UMD) -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+
+  <!-- ต้องโหลด config.js ก่อน app.js เสมอ -->
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <!-- TOP BAR -->
+    <div class="navbar">
+      <div class="brand">
+        <div class="brandTitle">Kaojino</div>
+        <div class="brandSub">THBC Exchange</div>
+      </div>
+
+      <button id="btnConnect">เชื่อมต่อกระเป๋า</button>
+    </div>
+
+    <h1 class="pageTitle">ซื้อ THBC ด้วย USDT</h1>
+    <p class="pageDesc">
+      ใช้สำหรับแลกเปลี่ยนภายในระบบ (Fixed Rate) และรองรับ Referral 3 ชั้น
+    </p>
+
+    <!-- EXCHANGE CARD -->
+    <div class="card">
+
+      <div class="rateBox">
+        <span class="muted">อัตราแลกเปลี่ยนปัจจุบัน</span>
+        <strong class="rateStrong">1 USDT = 35 THBC</strong>
+      </div>
+
+      <div class="balances">
+        <div class="balRow">
+          <span class="muted">ยอด USDT ของคุณ:</span>
+          <span class="mono"><span id="usdtBalance">-</span> USDT</span>
+        </div>
+        <div class="balRow">
+          <span class="muted">ยอด THBC ของคุณ:</span>
+          <span class="mono"><span id="thbcBalance">-</span> THBC</span>
+        </div>
+      </div>
+
+      <label for="usdtAmount" class="label">จำนวน USDT</label>
+      <input
+        id="usdtAmount"
+        type="number"
+        inputmode="decimal"
+        step="0.000001"
+        min="0"
+        placeholder="เช่น 10"
+      />
+
+      <div class="result">
+        <span class="muted">คุณจะได้รับ (ประมาณ):</span>
+        <div class="resultBig">
+          <span id="thbcReceive">0</span> <span class="unit">THBC</span>
+        </div>
+      </div>
+
+      <div class="hint">
+        แนะนำ: กด <b>อนุมัติ USDT</b> ก่อนครั้งแรก จากนั้นค่อยกด <b>ซื้อ THBC</b><br />
+        (ระบบเวอร์ชันใหม่จะ approve อัตโนมัติเมื่อจำเป็น เพื่อให้ใช้งานกับ Bitget ได้เสถียร)
+      </div>
+
+      <div class="btnRow">
+        <button id="btnApprove" class="btnOutline">อนุมัติ USDT</button>
+        <button id="btnBuy" class="btnPrimary">ซื้อ THBC</button>
+      </div>
+
+      <div id="txMessage" class="msg" aria-live="polite"></div>
+    </div>
+
+    <!-- REFERRAL CARD -->
+    <div class="card">
+      <h2 class="sectionTitle">ระบบแนะนำเพื่อน (Referral)</h2>
+      <p class="muted">
+        แชร์ลิงก์ของคุณให้เพื่อน เมื่อเพื่อนซื้อ THBC คุณจะได้รับค่าคอมมิชชั่น 3 ชั้น (10% / 3% / 2%)
+      </p>
+
+      <label class="label">ลิงก์แนะนำของคุณ</label>
+      <div class="refRow">
+        <input id="refLink" class="mono" readonly />
+        <button id="btnCopy" class="btnOutline">คัดลอก</button>
+      </div>
+
+      <div class="hint">
+        วิธีใช้: ส่งลิงก์นี้ให้เพื่อน แล้วให้เพื่อนเปิดผ่านลิงก์นี้ก่อนกดซื้อ
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer muted">
+      <div>เครือข่าย: BNB Smart Chain (Mainnet)</div>
+      <div>หมายเหตุ: หากทำรายการไม่สำเร็จ โปรดตรวจสอบว่า Wallet อยู่บน BSC และมี BNB สำหรับค่า Gas</div>
+    </div>
+
+  </div>
+
+  <!-- สไตล์ขั้นต่ำ (ถ้า style.css ของคุณมีอยู่แล้ว สามารถลบ block นี้ออกได้เลย) -->
+  <style>
+    /* ถ้า style.css ของคุณสวยอยู่แล้ว ไม่ต้องใช้ส่วนนี้ */
+    .wrap { max-width: 760px; margin: 0 auto; padding: 18px; }
+    .navbar { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .brandTitle { font-weight: 800; font-size: 18px; }
+    .brandSub { font-size: 12px; opacity: .8; margin-top: 2px; }
+    .pageTitle { margin: 18px 0 6px; }
+    .pageDesc { margin: 0 0 14px; opacity: .85; }
+    .card { margin: 14px 0; padding: 16px; border-radius: 14px; }
+    .rateBox { display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom: 10px; }
+    .rateStrong { font-size: 16px; }
+    .balances { margin: 10px 0 12px; }
+    .balRow { display:flex; justify-content:space-between; gap:10px; padding: 6px 0; }
+    .label { display:block; margin: 10px 0 6px; }
+    input { width:100%; padding: 12px; border-radius: 12px; }
+    .result { margin-top: 12px; }
+    .resultBig { font-size: 30px; font-weight: 800; margin-top: 6px; }
+    .unit { font-size: 14px; font-weight: 600; opacity:.85; }
+    .btnRow { display:flex; gap:10px; margin-top: 12px; }
+    button { padding: 12px 14px; border-radius: 14px; cursor:pointer; }
+    .btnPrimary { width: 100%; }
+    .btnOutline { width: 100%; }
+    .msg { margin-top: 12px; min-height: 22px; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    .muted { opacity: .85; }
+    .hint { margin-top: 10px; font-size: 13px; opacity: .9; line-height: 1.45; }
+    .refRow { display:flex; gap:10px; align-items:center; margin-top: 6px; }
+    .refRow input { flex: 1; }
+    .sectionTitle { margin: 0 0 8px; }
+    .footer { margin: 18px 0 6px; font-size: 12px; line-height: 1.5; }
+  </style>
+</body>
+</html>
